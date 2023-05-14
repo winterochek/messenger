@@ -1,0 +1,8 @@
+{
+  "ignoreFiles": [
+    "node_modules/**/*",
+    "vendor/**/*"
+  ],
+  "rules": {
+  }
+}

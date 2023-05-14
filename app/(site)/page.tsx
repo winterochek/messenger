@@ -1,8 +1,9 @@
 import Image from 'next/image';
+import AuthForm from './components/AuthForm';
 export default function Home() {
    return (
       <div className='flex flex-col min-h-full justify-center py-12 sm: px-6 bg-gray-100'>
-         <div className='sm:mx-auto sm: w-full sm:max-w-md'>
+         <div className='sm:mx-auto sm:w-full sm:max-w-md'>
             <Image
                alt='Logo'
                height={48}
@@ -14,7 +15,7 @@ export default function Home() {
                Sing in to your account
             </h2>
          </div>
-         {/* <AuthForm /> */}
+         <AuthForm />
       </div>
    );
 }
