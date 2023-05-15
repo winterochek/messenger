@@ -58,6 +58,7 @@ export default function AuthForm() {
                      id='name'
                      errors={errors}
                      register={register}
+                     disabled={isLoading}
                   />
                )}
                <Input
@@ -66,6 +67,7 @@ export default function AuthForm() {
                   id='email'
                   errors={errors}
                   register={register}
+                  disabled={isLoading}
                />
                <Input
                   label='Password'
@@ -73,6 +75,7 @@ export default function AuthForm() {
                   id='password'
                   errors={errors}
                   register={register}
+                  disabled={isLoading}
                />
                <div>
                   <Button disabled={isLoading} fullWidth type='submit'>
