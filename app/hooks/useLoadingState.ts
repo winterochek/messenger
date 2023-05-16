@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 type ReturnType = {
    isLoading: boolean;
@@ -10,15 +10,15 @@ type ReturnType = {
 
 const useLoadingState = (): ReturnType => {
    const [isLoading, setIsLoading] = useState(false);
-   const startLoading = () => {
+   const startLoading = useCallback(() => {
       setIsLoading(true);
-   };
-   const finishLoading = () => {
+   }, []);
+   const finishLoading = useCallback(() => {
       setIsLoading(false);
-   };
-   const changeLoadingState = () => {
+   }, []);
+   const changeLoadingState = useCallback(() => {
       setIsLoading((v) => !v);
-   };
+   }, []);
 
    return {
       isLoading,
@@ -28,4 +28,4 @@ const useLoadingState = (): ReturnType => {
    };
 };
 
-export default useLoadingState
+export default useLoadingState;
