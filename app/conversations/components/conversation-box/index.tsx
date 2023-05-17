@@ -10,6 +10,7 @@ import { FullConversationType } from '@/app/types';
 import { Message, User, Conversation } from '@prisma/client';
 import useOtherUser from '@/app/hooks/useOtherUser';
 import Avatar from '@/app/components/avatar';
+import AvatarGroup from '@/app/components/avatar/avatar-group';
 
 interface Props {
    conversation: FullConversationType;
@@ -54,7 +55,11 @@ export default function ConversationBox({ conversation, selected }: Props) {
             selected ? 'bg-neutral-100' : 'bg-white'
          )}
       >
-         <Avatar user={otherUser} />
+         {conversation.isGroup ? (
+            <AvatarGroup users={conversation.users} />
+         ) : (
+            <Avatar user={otherUser} />
+         )}
          <div className='min-w-0 flex-1'>
             <div className='focus:outline-none'>
                <div className='flex justify-between items-center mb-1'>
@@ -67,7 +72,14 @@ export default function ConversationBox({ conversation, selected }: Props) {
                      </p>
                   )}
                </div>
-               <p className={clsx('truncate text-sm ', hasSeen ? 'text-gray-500' : 'text-black font-medium')}>{lastMessageText}</p>
+               <p
+                  className={clsx(
+                     'truncate text-sm ',
+                     hasSeen ? 'text-gray-500' : 'text-black font-medium'
+                  )}
+               >
+                  {lastMessageText}
+               </p>
             </div>
          </div>
       </div>
