@@ -8,8 +8,8 @@ type ReturnType = {
    closeModal: () => void;
 };
 
-const useModal = (): ReturnType => {
-   const [open, setOpen] = useState(false);
+const useModal = (initial = false): ReturnType => {
+   const [open, setOpen] = useState(initial);
 
    const openModal = useCallback(() => {
       setOpen((v) => true);
@@ -25,4 +25,4 @@ const useModal = (): ReturnType => {
    };
 };
 
-export default useModal
+export default useModal;
