@@ -1,6 +1,8 @@
 'use client';
 
 import Avatar from '@/app/components/avatar';
+import ImageModal from '@/app/components/modal/image-modal';
+import { useModal } from '@/app/hooks';
 import { FullMessageType } from '@/app/types';
 import clsx from 'clsx';
 import { format } from 'date-fns';
@@ -14,6 +16,7 @@ interface Props {
 
 export default function MessageBox({ message, isLast }: Props) {
    const session = useSession();
+   const { open, openModal, closeModal } = useModal();
 
    const isOwn = session?.data?.user?.email === message?.sender.email;
    const seenList = (message.seen || [])
@@ -45,8 +48,10 @@ export default function MessageBox({ message, isLast }: Props) {
                </div>
             </div>
             <div className={messageStyles}>
+               <ImageModal src={message.image} isOpen={open} onClose={closeModal} />
                {message.image ? (
                   <Image
+                  onClick={openModal}
                      alt='Image'
                      height={288}
                      width={288}
