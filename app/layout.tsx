@@ -3,6 +3,7 @@ import ToasterContext from './context/ToasterContext';
 import { Inter } from 'next/font/google';
 
 import './globals.css';
+import ActiveStatus from './components/active-status';
 
 export const metadata = {
    title: 'Messenger',
@@ -21,6 +22,7 @@ export default function RootLayout({
          <body className={inter.className}>
             <AuthContext>
                <ToasterContext />
+               <ActiveStatus />
                {children}
             </AuthContext>
          </body>

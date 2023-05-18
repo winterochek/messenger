@@ -2,7 +2,7 @@
 
 import Avatar from '@/app/components/avatar';
 import ConfirmModal from '../confirm-modal';
-import { useModal } from '@/app/hooks';
+import { useActiveList, useModal } from '@/app/hooks';
 import { Dialog, Transition } from '@headlessui/react';
 import { Conversation, User } from '@prisma/client';
 import { format } from 'date-fns';
@@ -24,7 +24,8 @@ export default function ProfileDrawer({
    onClose,
 }: Props) {
    const { open: isModalOpen, openModal, closeModal } = useModal();
-
+   const { members } = useActiveList();
+   const isActive = members.indexOf(otherUser?.email!) !== -1;
    const joinedDate = useMemo(() => {
       return format(new Date(otherUser.createdAt), 'PP');
    }, [otherUser.createdAt]);
@@ -35,8 +36,8 @@ export default function ProfileDrawer({
 
    const statusText = useMemo(() => {
       if (conversation.isGroup) return `${conversation.users.length} members`;
-      return 'Active';
-   }, [conversation.isGroup, conversation.users.length]);
+      return isActive ? 'Active' : 'Offline';
+   }, [conversation.isGroup, isActive, conversation.users.length]);
    return (
       <>
          <ConfirmModal isOpen={isModalOpen} onClose={closeModal} />
