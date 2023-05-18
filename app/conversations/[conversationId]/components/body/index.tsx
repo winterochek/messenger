@@ -25,7 +25,6 @@ export default function Body({ initialMessages }: Props) {
       pusherClient.subscribe(conversationId);
 
       const messageHandler = (message: FullMessageType) => {
-         bottomRef?.current?.scrollIntoView();
          axios.post(`/api/conversations/${conversationId}/seen`);
          setMessages((current) => {
             if (find(current, { id: message.id })) {
@@ -33,12 +32,15 @@ export default function Body({ initialMessages }: Props) {
             }
             return [...current, message];
          });
+         bottomRef?.current?.scrollIntoView();
       };
 
       const updateMessageHandler = (newMessage: FullMessageType) => {
          setMessages((current) => {
             return current.map((currentMessage) => {
-               if (currentMessage.id === newMessage.id) return newMessage;
+               if (currentMessage.id === newMessage.id) {
+                  return newMessage;
+               }
                return currentMessage;
             });
          });
@@ -50,7 +52,6 @@ export default function Body({ initialMessages }: Props) {
 
       return () => {
          pusherClient.unsubscribe(conversationId);
-
          pusherClient.unbind('messages:new', messageHandler);
          pusherClient.unbind('message:update', updateMessageHandler);
       };

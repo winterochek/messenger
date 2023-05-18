@@ -14,7 +14,7 @@ const useActiveList = create<ActiveListStore>((set) => ({
       set((state) => ({
          members: state.members.filter((memberId) => memberId !== id),
       })),
-   set: (ids) => set({ members: ids }),
+   set: (ids) => set((state) => ({ members: ids })),
 }));
 
 export default useActiveList;

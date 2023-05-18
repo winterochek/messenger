@@ -9,7 +9,7 @@ export async function POST(request: Request) {
       const { userId, isGroup, members, name } = await request.json();
 
       if (!currentUser?.id || !currentUser?.email) {
-         return new NextResponse('Unauthorized', { status: 401 });
+         return new NextResponse('Unauthorized', { status: 400 });
       }
 
       if (isGroup && (!members || members.length < 2 || !name)) {
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
       }
 
       if (isGroup) {
-         const newGroupConversation = await prisma.conversation.create({
+         const newConversation = await prisma.conversation.create({
             data: {
                name,
                isGroup,
@@ -35,38 +35,40 @@ export async function POST(request: Request) {
             },
          });
 
-         newGroupConversation.users.forEach((user) => {
+         newConversation.users.forEach((user) => {
             if (user.email) {
                pusherServer.trigger(
                   user.email,
                   'conversation:new',
-                  newGroupConversation
+                  newConversation
                );
             }
          });
 
-         return NextResponse.json(newGroupConversation);
+         return NextResponse.json(newConversation);
       }
-      const existingConversation = (
-         await prisma.conversation.findMany({
-            where: {
-               OR: [
-                  {
-                     userIds: {
-                        equals: [currentUser.id, userId],
-                     },
+      const existingConversations = await prisma.conversation.findMany({
+         where: {
+            OR: [
+               {
+                  userIds: {
+                     equals: [currentUser.id, userId],
                   },
-                  {
-                     userIds: {
-                        equals: [userId, currentUser.id],
-                     },
+               },
+               {
+                  userIds: {
+                     equals: [userId, currentUser.id],
                   },
-               ],
-            },
-         })
-      )[0];
+               },
+            ],
+         },
+      });
 
-      if (existingConversation) return NextResponse.json(existingConversation);
+      const singleConversation = existingConversations[0];
+
+      if (singleConversation) {
+         return NextResponse.json(singleConversation);
+      }
 
       const newConversation = await prisma.conversation.create({
          data: {
@@ -84,7 +86,7 @@ export async function POST(request: Request) {
          },
       });
 
-      newConversation.users.forEach((user) => {
+      newConversation.users.map((user) => {
          if (user.email) {
             pusherServer.trigger(
                user.email,
