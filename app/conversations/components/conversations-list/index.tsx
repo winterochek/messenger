@@ -35,12 +35,17 @@ export default function ConversationsList({
    }, [session.data?.user?.email]);
 
    useEffect(() => {
-      if (!pusherKey) return;
+      if (!pusherKey) {
+         return;
+      }
+
       pusherClient.subscribe(pusherKey);
 
       const newHandler = (conversation: FullConversationType) => {
          setItems((current) => {
-            if (find(current, { id: conversation.id })) return current;
+            if (find(current, { id: conversation.id })) {
+               return current;
+            }
             return [conversation, ...current];
          });
       };
@@ -60,9 +65,10 @@ export default function ConversationsList({
       };
 
       const removeHandler = (conversation: FullConversationType) => {
-         setItems((current) => [
-            ...current.filter((item) => item.id !== conversation.id),
-         ]);
+         setItems((current) => {
+            return [...current.filter((item) => item.id !== conversation.id)];
+         });
+
          if (conversation.id === conversationId) {
             router.push('/conversations');
          }
